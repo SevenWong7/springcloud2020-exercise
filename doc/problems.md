@@ -19,5 +19,15 @@ java.lang.NoSuchMethodError: javax.servlet.ServletContext.getVirtualServerName()
 应该是默认使用了servlet-api3.0一下的包，在项目依赖包中（Project Structure）找到2.x的包，删掉重新运行即可。
 这里怀疑是优先加载了servlet-api2.5，从而没有使用springboot默认的tomcat-embed包中的servlet。
 
-
-
+### DS Replicas 显示localhost，而不是eureka.com
+因为。。。手残，default写成了defaule
+```yaml
+# 出问题的配置
+service-url:
+  defauleZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+```
+```yaml
+# 修改后的配置
+service-url:
+  defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+```
