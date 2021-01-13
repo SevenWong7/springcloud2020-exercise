@@ -1,5 +1,6 @@
 package com.seven.springcloud.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.seven.springcloud.entity.CommonResult;
 import com.seven.springcloud.entity.Payment;
 import com.seven.springcloud.service.PaymentService;
@@ -30,14 +31,19 @@ public class PaymentController {
     }
 
     @GetMapping("/payment/get/{id}")
+    @HystrixCommand(fallbackMethod = "getFallback")
     public CommonResult<Payment> get(@PathVariable("id") Long id) {
         Payment payment = paymentService.read(id);
         System.out.println(125436);
         if (payment != null) {
             return new CommonResult<>(200, "成功 serverPort：" + serverPort, payment);
         } else {
-            return new CommonResult<>(400, "没有记录");
+            throw new RuntimeException("测试hystrix异常");
         }
+    }
+
+    private CommonResult<Payment> getFallback(@PathVariable("id") Long id) {
+        return new CommonResult<>(401, "fallback");
     }
 
 }
